@@ -1,26 +1,7 @@
 "use client"
 import Image from "next/image";
 import styles from "./page.module.css";
-import { useEffect } from 'react';
-import {formConfig} from "./form.js"
-
-const Index = () => {
-  useEffect(() => {
-    // This script will render the form and handle form submission
-    const script = document.createElement('script');
-    script.src = 'https://apis.google.com/js/api.js';
-    script.async = true;
-    script.onload = () => {
-      // Here, you can put any initialization you need after loading the Google API script
-    };
-    document.body.appendChild(script);
-
-    const script2 = document.createElement('script');
-    script2.src = '/script.js';
-    script2.type = 'module';
-    document.body.appendChild(script2);
-  }, []);
-};
+import { Script } from "./script.js"
 
 export default function Home() {
   return (
@@ -29,12 +10,7 @@ export default function Home() {
         Custom Form Builder
       </header>
 
-      <main className={styles.main}>
-        <div id="form-builder">
-        </div>
-
-        <button id="submit-form">Submit Form</button>
-      </main>
+      <Script />
 
       <footer className={styles.footer}>
         <a

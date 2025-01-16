@@ -1,119 +1,82 @@
-// script.js
-import formConfig from './form.js';  // Import the form configuration
+import { useState } from 'react';
+import formConfig from './form';
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
+const Form = () => {
+  const [formData, setFormData] = useState({});
+
+  const handleChange = (event) => {
+    const { id, value } = event.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [id]: value
+    }));
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbwul6VoJwhv8ceXrHVWj2kSyXhdV1DnPW9NIyyaFTsNDvmRhNh0EDoegRIfkHbxme8J/exec';
+
     try {
-      const response = await fetch(process.env.HTML_FORM_DATA, {
+      const response = await fetch(scriptURL, {
         method: 'POST',
-        body: JSON.stringify(req.body),
+        body: JSON.stringify(formData),
         headers: {
-          'Content-Type': 'application/json',
-        },
+          'Content-Type': 'application/json'
+        }
       });
 
       const data = await response.json();
-      res.status(200).json(data);
-    } catch (error) {
-      res.status(500).json({ error: 'Error submitting form' });
-    }
-  } else {
-    res.status(405).json({ error: 'Method Not Allowed' });
-  }
-}
-
-// Function to render the form
-function renderForm(config) {
-  const formBuilder = document.getElementById("form-builder");
-
-  config.forEach((field) => {
-    const fieldContainer = document.createElement("div");
-    fieldContainer.classList.add("form-field");
-
-    if (field.type === "iframe") {
-      const iframeLabel = document.createElement("label");
-      iframeLabel.textContent = field.label;
-
-      const iframe = document.createElement("iframe");
-      iframe.src = field.src;
-      iframe.width = "100%";
-      iframe.height = "315";
-      iframe.style.border = "none";
-
-      fieldContainer.appendChild(iframeLabel);
-      fieldContainer.appendChild(iframe);
-    } else {
-      const label = document.createElement("label");
-      label.textContent = field.label;
-
-      let input;
-      if (field.type.includes("radio")) {
-        input = document.createElement("div");
-        field.options.forEach((option) => {
-          const radioWrapper = document.createElement("div");
-
-          const radioInput = document.createElement("input");
-          radioInput.type = "radio";
-          radioInput.name = field.id;
-          radioInput.value = option;
-
-          const radioLabel = document.createElement("label");
-          radioLabel.textContent = option;
-
-          radioWrapper.appendChild(radioInput);
-          radioWrapper.appendChild(radioLabel);
-          input.appendChild(radioWrapper);
-        });
-      } else {
-        input = document.createElement("input");
-        input.type = field.type;
-        input.placeholder = field.placeholder || "";
-        input.id = field.id;
-      }
-
-      fieldContainer.appendChild(label);
-      fieldContainer.appendChild(input);
-    }
-
-    formBuilder.appendChild(fieldContainer);
-  });
-}
-
-// Adjust the handleSubmit function
-function handleSubmit() {
-  const formData = {};
-  formConfig.forEach((field) => {
-    if (field.type.includes("radio")) {
-      const selectedOption = document.querySelector(`input[name="${field.id}"]:checked`);
-      formData[field.id] = selectedOption ? selectedOption.value : null;
-    } else if (field.type !== "iframe") {
-      const input = document.getElementById(field.id);
-      formData[field.id] = input ? input.value : null;
-    }
-  });
-
-  // Call your Next.js API
-  fetch('/api/submitForm', {
-    method: 'POST',
-    body: JSON.stringify(formData),
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(response => response.json())
-    .then(data => {
       alert('Form Submitted Successfully!');
       console.log('Success:', data);
-    })
-    .catch(e => {
+    } catch (error) {
       alert('Error. Form was not submitted. Please try again.');
-      console.log('Error:', e);
-    });
-}
+      console.log('Error:', error);
+    }
+  };
 
-document.addEventListener("DOMContentLoaded", () => {
-  renderForm(formConfig);
+  return (
+    <form onSubmit={handleSubmit}>
+      {formConfig.map((field) => (
+        <div key={field.id} className="form-field">
+          <label htmlFor={field.id}>{field.label}</label>
 
-  const submitButton = document.getElementById("submit-form");
-  submitButton.addEventListener("click", handleSubmit);
-});
+          {field.type === 'iframe' ? (
+            <iframe
+              src={field.src}
+              width="100%"
+              height="315"
+              style={{ border: 'none' }}
+            />
+          ) : field.type.includes('radio') ? (
+            <div>
+              {field.options.map((option) => (
+                <div key={option}>
+                  <input
+                    type="radio"
+                    id={field.id}
+                    name={field.id}
+                    value={option}
+                    onChange={handleChange}
+                  />
+                  <label>{option}</label>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <input
+              type={field.type}
+              id={field.id}
+              placeholder={field.placeholder}
+              value={formData[field.id] || ''}
+              onChange={handleChange}
+            />
+          )}
+        </div>
+      ))}
+
+      <button type="submit">Submit Form</button>
+    </form>
+  );
+};
+
+export default Script;
