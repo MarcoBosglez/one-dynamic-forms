@@ -1,7 +1,7 @@
 # Dynamic-Forms
 Repository made for a custom forms website for client OneRPM.
 
-Made with GitHub Pages and Google Apps Script.
+Made with Next.js, Vercel, and Google Apps Script.
 
 Featuring:
 - Google Forms type of formulary
@@ -9,3 +9,4 @@ Featuring:
 - Connected with GoogleSheets and private Drive Folder
 
 WebApp:
+https://one-dynamic-forms.vercel.app
