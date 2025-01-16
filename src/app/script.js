@@ -1,8 +1,26 @@
-import form from './form.js';
-const formConfig = form
+// script.js
+import formConfig from './form.js';  // Import the form configuration
 
-// Google Sheets Script URL
-const scriptURL = process.env.HTML_FORM_DATA
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    try {
+      const response = await fetch(process.env.HTML_FORM_DATA, {
+        method: 'POST',
+        body: JSON.stringify(req.body),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const data = await response.json();
+      res.status(200).json(data);
+    } catch (error) {
+      res.status(500).json({ error: 'Error submitting form' });
+    }
+  } else {
+    res.status(405).json({ error: 'Method Not Allowed' });
+  }
+}
 
 // Function to render the form
 function renderForm(config) {
@@ -60,14 +78,13 @@ function renderForm(config) {
     formBuilder.appendChild(fieldContainer);
   });
 }
-// Function to handle form submission
+
+// Adjust the handleSubmit function
 function handleSubmit() {
   const formData = {};
   formConfig.forEach((field) => {
     if (field.type.includes("radio")) {
-      const selectedOption = document.querySelector(
-        `input[name="${field.id}"]:checked`
-      );
+      const selectedOption = document.querySelector(`input[name="${field.id}"]:checked`);
       formData[field.id] = selectedOption ? selectedOption.value : null;
     } else if (field.type !== "iframe") {
       const input = document.getElementById(field.id);
@@ -75,50 +92,25 @@ function handleSubmit() {
     }
   });
 
-  const {
-    territory,           // Territorio
-    artist_name,         // Artista
-    artist_id,           // ID
-    single,              // Sencillo
-    playlist_link,       // Link de la Playlist
-    ad_type_radio,       // Tipo de Anuncio
-    age_range,           // Rango de Edad
-    gender_radio,        // Género
-    language,            // Lenguaje
-    genre,               // Género Musical
-    playlist_type,       // Tipo de Playlist
-  } = formData;
-
-  // Here you can integrate the Google Sheets API
-  // Example: send formData to your backend or API endpoint
-  fetch(scriptURL, {
+  // Call your Next.js API
+  fetch('/api/submitForm', {
     method: 'POST',
-    body: JSON.stringify({
-      territory,           // Territorio
-      artist_name,         // Artista
-      artist_id,           // ID
-      single,              // Sencillo
-      playlist_link,       // Link de la Playlist
-      ad_type_radio,       // Tipo de Anuncio
-      age_range,           // Rango de Edad
-      gender_radio,        // Género
-      language,            // Lenguaje
-      genre,               // Género Musical
-      playlist_type,       // Tipo de Playlist
-    })  // Ensure the body is stringified
+    body: JSON.stringify(formData),
+    headers: {
+      'Content-Type': 'application/json',
+    },
   })
-  .then(response => response.json()) 
-  .then(data => {
-    alert('Form Submitted Successfully!')
-    console.log('Success:', data)
-  })
-  .catch(e => {
-    alert('Error. Form was not submitted. Please try again.')
-    console.log('Error', e)
-  })
+    .then(response => response.json())
+    .then(data => {
+      alert('Form Submitted Successfully!');
+      console.log('Success:', data);
+    })
+    .catch(e => {
+      alert('Error. Form was not submitted. Please try again.');
+      console.log('Error:', e);
+    });
 }
 
-// Render the form on page load
 document.addEventListener("DOMContentLoaded", () => {
   renderForm(formConfig);
 

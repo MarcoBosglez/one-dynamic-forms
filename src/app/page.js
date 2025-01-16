@@ -1,13 +1,29 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import { useEffect } from 'react';
+import {formConfig} from "./form.js"
+
+const Index = () => {
+  useEffect(() => {
+    // This script will render the form and handle form submission
+    const script = document.createElement('script');
+    script.src = 'https://apis.google.com/js/api.js';
+    script.async = true;
+    script.onload = () => {
+      // Here, you can put any initialization you need after loading the Google API script
+    };
+    document.body.appendChild(script);
+
+    const script2 = document.createElement('script');
+    script2.src = '/script.js';
+    script2.type = 'module';
+    document.body.appendChild(script2);
+  }, []);
+};
 
 export default function Home() {
   return (
     <div className={styles.page}>
-      <link rel="stylesheet" href="styles.css"/>
-      <script src="https://apis.google.com/js/api.js"></script>
-      <script src="script.js" type="module"></script>
-
       <header>
         Custom Form Builder
       </header>
@@ -17,8 +33,8 @@ export default function Home() {
         </div>
 
         <button id="submit-form">Submit Form</button>
-
       </main>
+
       <footer className={styles.footer}>
         <a
           href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
