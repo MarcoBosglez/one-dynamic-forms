@@ -6,7 +6,7 @@ import formConfig from './form';
 
 export default function Home() {
   const [formData, setFormData] = useState({});
-  const scriptURL = `https://script.google.com/macros/s/${process.env.NEXT_PUBLIC_HTML_FORM_DATA}/exec`;
+  const scriptURL = `https://script.google.com/macros/s/${process.env.HTML_FORM_DATA}/exec`;
 
   const handleChange = (event) => {
     const { id, value } = event.target;

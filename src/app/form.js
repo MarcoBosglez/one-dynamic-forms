@@ -69,7 +69,7 @@ export default [
     {
       "type": "iframe",
       "label": "Link con Assets",
-      "src": process.env.IMAGE_DIMENSION_CHECK,
+      "src": `https://script.google.com/macros/s/${process.env.IMAGE_DIMENSION_CHECK}/exec`,
       "id": "iframe1"
     }
 ]
