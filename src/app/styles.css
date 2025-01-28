@@ -1,45 +1,124 @@
 body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #FFFFFF;
-  color: #000000;
-  margin: 0;
-  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #dfdff5;
+  color: #333;
+  margin: auto;
+  height: auto;
+  width: 50%;
+  padding: 30px;
+  align-items: center;
 }
 
 header {
-  background-color: #FF9800;
-  color: #FFFFFF;
-  padding: 20px;
   text-align: center;
-  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+}
+
+header h1 {
+  color: #ff6600;
+  margin: 0;
+  font-size: 2rem;
+}
+
+header p {
+  font-size: 1rem;
+  color: #666;
+  margin: 0.5rem 0 0;
+}
+
+h1 {
+  text-align: center;
+  color: #ff6600;
+}
+
+.form-field {
+  margin-bottom: 1.5rem;
+  padding: 1.2rem;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  margin-bottom: 1.2rem;
   font-weight: bold;
+  color: #333;
 }
 
-button {
-  background-color: #FF9800;
-  color: #FFFFFF;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.form-field { 
+  padding: 20px;
 }
 
-button:hover {
-  background-color: #e68900;
-}
-
-input, select, textarea {
-  width: 100%;
-  padding: 10px;
-  margin: 10px 0;
-  border: 1px solid #CCCCCC;
-  border-radius: 5px;
+input[type="text"] {
+  border-radius: 4px;
+  font-size: 1rem;
   box-sizing: border-box;
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: #FF9800;
-  outline: none;
-  box-shadow: 0 0 5px rgba(255, 152, 0, 0.5);
+label[for*="radio"] + div > div{
+  display: flex;
+  padding: 5px;
+  text-align: left;
+}
+
+
+label[for*="radio"] + div > div label{
+  font-weight: normal;
+}
+
+input[type="radio"] {
+  width: auto;
+  height: 50%;
+  margin-right: 0.5rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #e05500;
+}
+
+iframe {
+  width: 100%;
+  height: 600px;
+  border: none;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-width: 968px) {
+  body {
+    width: 70%; /* Adjust width to 70% for smaller screens */
+    margin-top: 20px;
+    padding: 15px; /* Optional: Reduce padding for better spacing */
+  }
+
+  .form-container {
+    width: 100%; /* Ensure form-container takes full width */
+    padding: 1.5rem; /* Adjust padding if needed */
+  }
+
+  header h1 {
+    font-size: 1.5rem; /* Adjust font size for smaller screens */
+  }
+
+  button[type="submit"] {
+    font-size: 0.9rem; /* Slightly smaller button text */
+  }
 }

@@ -1,11 +1,19 @@
 "use client"
+import * as React from 'react';
 import Image from "next/image";
-import styles from "./page.module.css";
 import { useState } from 'react';
 import formConfig from './form';
+import logo from './assets/ONErpm.png'
+import Input from '@mui/joy/Input';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
 
 export default function Home() {
   const [formData, setFormData] = useState({});
+  console.log(process.env.HTML_FORM_DATA)
   const scriptURL = `https://script.google.com/macros/s/${process.env.HTML_FORM_DATA}/exec`;
 
   const handleChange = (event) => {
@@ -22,6 +30,7 @@ export default function Home() {
       const response = await fetch(scriptURL, {
         method: 'POST',
         body: JSON.stringify(formData),
+        mode: 'no-cors',
       });
       const data = await response.json();
       alert('Form Submitted Successfully!');
@@ -33,24 +42,46 @@ export default function Home() {
   };
 
   return (
-    <div className={styles.page}>
+    <div>
       <header>
-        Custom Form Builder
+        <Image alt="logo" src={logo} style={{width: "30%", height: "50%"}}/>
+        <br/>
+        <h1>Forms</h1>
+        <p>Las respuestas se grabarán una vez cargue los archivos y envíe este formulario.</p>
+        <br/>
+        <p style={{color: "red"}}>* Indica una pregunta requerida</p>
       </header>
+
 
       <form onSubmit={handleSubmit}>
       {formConfig.map((field) => (
         <div key={field.id} className="form-field">
-          <label htmlFor={field.id}>{field.label}</label>
+          <label htmlFor={field.id}>{field.label} <a style={{color: "red"}}>*</a></label>
 
           {field.type === 'iframe' ? (
             <iframe
               src={field.src}
-              width="100%"
-              height="315"
-              style={{ border: 'none' }}
             />
-          ) : field.type.includes('radio') ? (
+          ) : field.type === 'radio' ? (
+            <FormControl>
+              <RadioGroup
+                
+              >
+              {field.options.map((option) => (
+                <FormControlLabel 
+                  type="radio"
+                  id={field.id}
+                  name={field.id}
+                  value={option} 
+                  control={<Radio/>} 
+                  label={option} 
+                  onChange={handleChange}
+                  required
+                />
+              ))}
+              </RadioGroup>
+            </FormControl>
+          ) : field.type === 'radioss' ? (
             <div>
               {field.options.map((option) => (
                 <div key={option}>
@@ -60,18 +91,37 @@ export default function Home() {
                     name={field.id}
                     value={option}
                     onChange={handleChange}
+                    required
                   />
                   <label>{option}</label>
                 </div>
               ))}
             </div>
           ) : (
-            <input
+            <Input
+              placeholder={field.placeholder}
+              sx={{
+                '&::before': {
+                  border: '1.5px solid var(--Input-focusedHighlight)',
+                  transform: 'scaleX(0)',
+                  left: '2.5px',
+                  right: '2.5px',
+                  bottom: 0,
+                  top: 'unset',
+                  transition: 'transform .15s cubic-bezier(0.1,0.9,0.2,1)',
+                  borderRadius: 0,
+                  borderBottomLeftRadius: '64px 20px',
+                  borderBottomRightRadius: '64px 20px',
+                },
+                '&:focus-within::before': {
+                  transform: 'scaleX(1)',
+                },
+              }}
               type={field.type}
               id={field.id}
-              placeholder={field.placeholder}
               value={formData[field.id] || ''}
               onChange={handleChange}
+              required
             />
           )}
         </div>
@@ -80,49 +130,9 @@ export default function Home() {
       <button type="submit">Submit Form</button>
     </form>
 
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      <footer>
+        <p>ONErpm Forms</p>
+        <p>© Copyright 2025 ONErpm. All Rights Reserved.</p>
       </footer>
     </div>
   );
