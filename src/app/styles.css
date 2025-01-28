@@ -74,9 +74,30 @@ label[for*="radio"] + div > div label{
 }
 
 input[type="radio"] {
+  --s: 1em;
+  --c: #39a5ee;
+
   width: auto;
-  height: 50%;
   margin-right: 0.5rem;
+  height: var(--s);
+  aspect-ratio: 1;
+  border: calc(var(--s)/8) solid #939393;
+  padding: calc(var(--s)/8);
+  background: 
+     radial-gradient(farthest-side,var(--c) 94%,#0000) 
+     50%/0 0 no-repeat content-box;
+  border-radius: 50%;
+  outline-offset: calc(var(--s)/10);
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  font-size: inherit;
+  transition: .3s;
+}
+input[type=radio]:checked {
+  border-color: var(--c);
+  background-size: 100% 100%;
 }
 
 button[type="submit"] {

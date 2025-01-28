@@ -5,18 +5,18 @@ import { useState } from 'react';
 import formConfig from './form';
 import logo from './assets/ONErpm.png'
 import Input from '@mui/joy/Input';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
+
+// TODO REDIRECT TO THANK YOU FOR SUBMITTING PAGE AND REALOAD
 
 export default function Home() {
   const [formData, setFormData] = useState({});
   const scriptURL = `${process.env.HTML_FORM_DATA}`;
 
+  const [isValid, setIsValid] = useState(false);
+
   const handleChange = (event) => {
     const { id, value } = event.target;
+    console.log(formData)
     setFormData((prevData) => ({
       ...prevData,
       [id]: value
@@ -25,17 +25,37 @@ export default function Home() {
   
   const handleSubmit = async (event) => {
     event.preventDefault();
-    try {
-      const response = await fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      alert('Form Submitted Successfully!');
-      console.log('Success:', data);
-    } catch (error) {
-      alert('Error. Form was not submitted. Please try again.');
-      console.log('Error:', error);
+    validateIframeContent();
+
+    if (isValid) {
+      try {
+        const response = await fetch(scriptURL, {
+          method: 'POST',
+          body: JSON.stringify(formData),
+        });
+        const data = await response.json();
+        alert('Form Submitted Successfully!');
+        console.log('Success:', data);
+      } catch (error) {
+        alert('Error. Form was not submitted. Please try again.');
+        console.log('Error:', error);
+      }
+    }
+  };
+
+  const validateIframeContent = () => {
+    const iframe = document.getElementById("iframe");
+    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+    const targetMessage = iframeDoc.querySelector(`div[id="output"] p`);
+
+    console.log('messages', targetMessage?.textContent)
+
+    if (targetMessage?.textContent === "Archivo(s) enviado(s) correctamente") {
+      setIsValid(true);
+      setFormData((prevData) => ({
+        ...prevData,
+        "savedFolder": targetMessage?.id
+      }));
     }
   };
 
@@ -50,7 +70,6 @@ export default function Home() {
         <p style={{color: "red"}}>* Indica una pregunta requerida</p>
       </header>
 
-
       <form onSubmit={handleSubmit}>
       {formConfig.map((field) => (
         <div key={field.id} className="form-field">
@@ -59,27 +78,9 @@ export default function Home() {
           {field.type === 'iframe' ? (
             <iframe
               src={field.src}
+              id="iframe"
             />
           ) : field.type === 'radio' ? (
-            <FormControl>
-              <RadioGroup
-                
-              >
-              {field.options.map((option) => (
-                <FormControlLabel 
-                  type="radio"
-                  id={field.id}
-                  name={field.id}
-                  value={option} 
-                  control={<Radio/>} 
-                  label={option} 
-                  onChange={handleChange}
-                  required
-                />
-              ))}
-              </RadioGroup>
-            </FormControl>
-          ) : field.type === 'radioss' ? (
             <div>
               {field.options.map((option) => (
                 <div key={option}>

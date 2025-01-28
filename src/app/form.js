@@ -68,6 +68,7 @@ export default [
     },
     {
       "type": "iframe",
+      "label": "Subida de archivos de anuncios",
       "src": process.env.IMAGE_DIMENSION_CHECK,
       "id": "iframe"
     }
