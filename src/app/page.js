@@ -14,7 +14,7 @@ import FormLabel from '@mui/material/FormLabel';
 export default function Home() {
   const [formData, setFormData] = useState({});
   console.log(process.env.HTML_FORM_DATA)
-  const scriptURL = `https://script.google.com/macros/s/${process.env.HTML_FORM_DATA}/exec`;
+  const scriptURL = `${process.env.HTML_FORM_DATA}`;
 
   const handleChange = (event) => {
     const { id, value } = event.target;
