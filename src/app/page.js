@@ -13,7 +13,6 @@ import FormLabel from '@mui/material/FormLabel';
 
 export default function Home() {
   const [formData, setFormData] = useState({});
-  console.log(process.env.HTML_FORM_DATA)
   const scriptURL = `${process.env.HTML_FORM_DATA}`;
 
   const handleChange = (event) => {
@@ -30,7 +29,6 @@ export default function Home() {
       const response = await fetch(scriptURL, {
         method: 'POST',
         body: JSON.stringify(formData),
-        mode: 'no-cors',
       });
       const data = await response.json();
       alert('Form Submitted Successfully!');
