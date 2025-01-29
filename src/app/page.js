@@ -21,7 +21,7 @@ export default function Home() {
   const [isValid, setIsValid] = useState(false);
 
   // Retrieve form submission URL from environment variables
-  const scriptURL = `${process.env.HTML_FORM_DATA}`;
+  const scriptURL = process.env.NEXT_PUBLIC_HTML_FORM_DATA;
 
   /**
    * Handles input changes and updates form state.

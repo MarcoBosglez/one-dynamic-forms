@@ -63,7 +63,7 @@ export default [
     {
       "type": "iframe",
       "label": "Tipo de Anuncio",
-      "src": process.env.IMAGE_DIMENSION_CHECK,
+      "src": process.env.NEXT_PUBLIC_IMAGE_DIMENSION_CHECK,
       "id": "iframe"
     }
 ]
