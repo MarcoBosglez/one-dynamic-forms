@@ -39,3 +39,37 @@ footer {
 footer p {
   color: rgb(69, 68, 78);
 }
+
+.response-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;  
+  height: 60vh;
+}
+
+.thank-you {
+  width: 100%;
+  max-width: 500px;  /* Limit the max width */
+  padding: 20px;
+  background-color: #fff;  /* White background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for card effect */
+  border-radius: 10px; /* Rounded corners */
+}
+
+.thank-you .card {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8f8f8; 
+  border-radius: 8px;
+}
+
+.thank-you .card h2 {
+  color: #ff6600;
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.thank-you .card p {
+  color: #333;
+  font-size: 1.2em;
+}

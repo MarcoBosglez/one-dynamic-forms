@@ -2,21 +2,21 @@
 export default [
     {
       "type": "text",
-      "label": "Territorio",
-      "placeholder": "Localización del ad",
-      "id": "territory"
-    },
-    {
-      "type": "text",
       "label": "Artista",
       "placeholder": "Nombre del Artista",
       "id": "artist_name"
     },
     {
       "type": "text",
-      "label": "ID",
+      "label": "ID del Artista",
       "placeholder": "ID del Artista",
       "id": "artist_id"
+    },
+    {
+      "type": "text",
+      "label": "Territorio",
+      "placeholder": "Localización del anuncio",
+      "id": "territory"
     },
     {
       "type": "text",
@@ -29,12 +29,6 @@ export default [
       "label": "Link de la Playlist",
       "placeholder": "Eg. spotify.com/artist/album/xxxx",
       "id": "playlist_link"
-    },
-    {
-      "type": "radio",
-      "label": "Tipo de Anuncio",
-      "options": ["Audio", "Banner", "Imagen"],
-      "id": "ad_type_radio"
     },
     {
       "type": "text",
@@ -68,7 +62,7 @@ export default [
     },
     {
       "type": "iframe",
-      "label": "Subida de archivos de anuncios",
+      "label": "Tipo de Anuncio",
       "src": process.env.IMAGE_DIMENSION_CHECK,
       "id": "iframe"
     }

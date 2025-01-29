@@ -1,31 +1,47 @@
 "use client"
 import * as React from 'react';
-import Image from "next/image";
+import { useEffect } from 'react';
 import { useState } from 'react';
-import formConfig from './form';
-import logo from './assets/ONErpm.png'
-import Input from '@mui/joy/Input';
+import { useRouter  } from 'next/navigation';
 
-// TODO REDIRECT TO THANK YOU FOR SUBMITTING PAGE AND REALOAD
+import Image from 'next/image';
+import logo from './assets/ONErpm.png'
+
+import Input from '@mui/joy/Input';
+import formConfig from './form';
 
 export default function Home() {
-  const [formData, setFormData] = useState({});
-  const scriptURL = `${process.env.HTML_FORM_DATA}`;
+  // Set router to navigate pages
+  const router = useRouter();
 
+  // State to manage form data
+  const [formData, setFormData] = useState({});
+
+  // State to track iframe validation status
   const [isValid, setIsValid] = useState(false);
 
+  // Retrieve form submission URL from environment variables
+  const scriptURL = `${process.env.HTML_FORM_DATA}`;
+
+  /**
+   * Handles input changes and updates form state.
+   * @param {Object} event - The event object from input change.
+   */
   const handleChange = (event) => {
     const { id, value } = event.target;
-    console.log(formData)
     setFormData((prevData) => ({
       ...prevData,
       [id]: value
     }));
+    router.push('/thank-you');
   };
   
+  /**
+   * Handles form submission and sends data to the backend.
+   * @param {Object} event - The form submission event.
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
-    validateIframeContent();
 
     if (isValid) {
       try {
@@ -34,35 +50,44 @@ export default function Home() {
           body: JSON.stringify(formData),
         });
         const data = await response.json();
-        alert('Form Submitted Successfully!');
-        console.log('Success:', data);
+        router.push('/thank-you');
       } catch (error) {
         alert('Error. Form was not submitted. Please try again.');
         console.log('Error:', error);
       }
+    } else {
+      alert('Submitted files were not validated. Please follow upload instructions and try again.');
     }
   };
 
-  const validateIframeContent = () => {
-    const iframe = document.getElementById("iframe");
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    const targetMessage = iframeDoc.querySelector(`div[id="output"] p`);
+  // Effect to listen for messages from iframe
+  useEffect(() => {
+    const handleMessage = (event) => {
+      // Ensure message comes from trusted source
+      if (!(event.origin?.includes("script.googleusercontent.com"))) return;
 
-    console.log('messages', targetMessage?.textContent)
+      if (event.data?.status) {
+        setIsValid(event.data?.status);
+        setFormData((prevData) => ({
+          ...prevData,
+          "savedFolder": event.data?.savedFolder,
+          "savedFolder": event.data?.adType
+        }));
+      }
+    };
 
-    if (targetMessage?.textContent === "Archivo(s) enviado(s) correctamente") {
-      setIsValid(true);
-      setFormData((prevData) => ({
-        ...prevData,
-        "savedFolder": targetMessage?.id
-      }));
-    }
-  };
+    window.addEventListener("message", handleMessage);
+
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
 
   return (
     <div>
       <header>
-        <Image alt="logo" src={logo} style={{width: "30%", height: "50%"}}/>
+        <Image alt="logo" src={logo}/>
+        <br/>
         <br/>
         <h1>Forms</h1>
         <p>Las respuestas se grabarán una vez cargue los archivos y envíe este formulario.</p>
