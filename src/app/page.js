@@ -11,16 +11,12 @@ import Input from '@mui/joy/Input';
 import formConfig from './form';
 
 export default function Home() {
-  // Set router to navigate pages
   const router = useRouter();
 
-  // State to manage form data
   const [formData, setFormData] = useState({});
-
-  // State to track iframe validation status
   const [isValid, setIsValid] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Retrieve form submission URL from environment variables
   const scriptURL = process.env.NEXT_PUBLIC_HTML_FORM_DATA;
 
   /**
@@ -41,6 +37,7 @@ export default function Home() {
    */
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setLoading(true);
 
     if (isValid) {
       try {
@@ -49,9 +46,11 @@ export default function Home() {
           body: JSON.stringify(formData),
         });
         const data = await response.json();
+        setLoading(false);
         router.push('/thank-you');
       } catch (error) {
         alert('Error. Form was not submitted. Please try again.');
+        setLoading(false);
         console.log('Error:', error);
       }
     } else {
@@ -70,7 +69,7 @@ export default function Home() {
         setFormData((prevData) => ({
           ...prevData,
           "savedFolder": event.data?.savedFolder,
-          "savedFolder": event.data?.adType
+          "adType": event.data?.adType
         }));
       }
     };
@@ -151,6 +150,11 @@ export default function Home() {
       ))}
 
       <button type="submit">Submit Form</button>
+      {loading && (
+        <div className="loading-spinner">
+          <img src="/loading.gif" alt="Loading..." />
+        </div>
+      )}
     </form>
 
       <footer>
