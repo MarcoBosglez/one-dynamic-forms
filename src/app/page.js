@@ -33,7 +33,6 @@ export default function Home() {
       ...prevData,
       [id]: value
     }));
-    router.push('/thank-you');
   };
   
   /**
